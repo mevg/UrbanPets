@@ -1,0 +1,36 @@
+name: Backend CI (UrbanPets)
+
+on:
+  push:
+    branches: [ dev, main ]
+    paths:
+      - 'src/Api/**'
+      - 'Directory.Build.props'
+      - 'Directory.Packages.props'
+  pull_request:
+    branches: [ dev, main ]
+    paths:
+      - 'src/Api/**'
+      - 'Directory.Build.props'
+      - 'Directory.Packages.props'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # Permite que herramientas como GitVersion lean el historial completo si es necesario
+
+    - name: Configurar el SDK de .NET 10
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x' # Utiliza la última versión estable del SDK de .NET 10
+
+    - name: Restaurar dependencias NuGet
+      run: dotnet restore UrbanPets.sln
+
+    - name: Compilar Solución
+      run: dotnet build UrbanPets.sln --configuration Release --no-restore
