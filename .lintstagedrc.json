@@ -1,0 +1,8 @@
+{
+  "src/**/*.cs": [
+    "dotnet format UrbanPets.slnx --include"
+  ],
+  "tests/**/*.cs": [
+    "dotnet format UrbanPets.slnx --include"
+  ]
+}
