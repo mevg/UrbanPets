@@ -46,3 +46,6 @@ dotnet_diagnostic.RS0016.severity = warning
 
 # Estilo de llaves: NewLine para todo (Allman style, clásico de C#)
 csharp_new_line_before_open_brace = all:warning
+
+trim_trailing_whitespace = true
+insert_final_newline = true
