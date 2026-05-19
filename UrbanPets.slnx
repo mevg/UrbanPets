@@ -12,4 +12,7 @@
   <Folder Name="/src/Infrastructure/">
     <Project Path="src/Infrastructure/UrbanPets.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/UrbanPets.Domain.Tests/UrbanPets.Domain.Tests.csproj" />
+  </Folder>
 </Solution>
