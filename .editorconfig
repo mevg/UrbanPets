@@ -1,0 +1,48 @@
+# Archivo de configuración de estilo de código para UrbanPets (.NET 10)
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.cs]
+# --- REGLAS DE SINTAXIS C# ---
+
+# Preferir directivas 'using' globales o implícitas fuera del namespace
+csharp_using_directive_placement = outside_namespace:warning
+
+# Modificadores de acceso (internal, private, etc.) deben declararse explícitamente
+dotnet_style_require_accessibility_modifiers = always:warning
+
+# Preferir expresiones con cuerpo de expresión (Expression-bodied members) para métodos simples
+csharp_style_expression_bodied_methods = true:suggestion
+
+# --- USO DE 'VAR' (Estilo moderno y scannable) ---
+# Usar 'var' cuando el tipo sea evidente (ej. var x = new MyClass())
+csharp_style_var_when_type_is_apparent = true:warning
+# Usar 'var' para tipos numéricos integrados e intrínsecos
+csharp_style_var_elsewhere = true:suggestion
+
+# --- REGLAS DE LIMPIEZA Y DISEÑO ---
+# Organizar usings: Colocar los de 'System' primero
+dotnet_sort_system_directives_first = true:suggestion
+
+# Evitar usings innecesarios
+dotnet_style_qualification_with_this = false:warning
+
+# Nuevas características de C# (Pattern matching, Tuplas)
+csharp_style_pattern_matching_over_as_with_null_check = true:warning
+csharp_style_prefer_tuple_constructor = true:warning
+
+# --- REGLAS DE FORMATO (Espacios y Llaves) ---
+# Forzar el uso de llases ({}) en bloques condicionales (if, elses, loops) incluso si son de una sola línea
+csharp_preserve_single_line_blocks = false:none
+csharp_style_allow_embedded_statements_on_same_line_between_tokens = false:none
+dotnet_diagnostic.RS0016.severity = warning
+
+# Estilo de llaves: NewLine para todo (Allman style, clásico de C#)
+csharp_new_line_before_open_brace = all:warning
