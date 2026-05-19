@@ -484,3 +484,5 @@ $RECYCLE.BIN/
 # Angular / Node
 src/Client/node_modules/
 src/Client/dist/
+
+key.txt
