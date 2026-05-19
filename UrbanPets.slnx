@@ -3,4 +3,13 @@
   <Folder Name="/src/Api/">
     <Project Path="src/Api/UrbanPets.Api.csproj" />
   </Folder>
+  <Folder Name="/src/Application/">
+    <Project Path="src/Application/UrbanPets.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/Domain/">
+    <Project Path="src/Domain/UrbanPets.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/Infrastructure/">
+    <Project Path="src/Infrastructure/UrbanPets.Infrastructure.csproj" />
+  </Folder>
 </Solution>
