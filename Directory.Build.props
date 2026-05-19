@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <!-- Define la versión de .NET para toda la solución (ajusta si usas net9.0) -->
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    
+    <!-- Prácticas DevOps y de Calidad -->
+    <!-- Convierte las advertencias en errores. Si hay código dudoso, el pipeline fallará. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Fuerza a que las reglas de estilo de código (.editorconfig) se evalúen durante la compilación -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+</Project>
