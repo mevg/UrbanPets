@@ -1,108 +1,108 @@
 name: Backend CI (UrbanPets)
 
 on:
-  push:
-    branches: [ dev, main ]
-    paths:
-      - 'src/Api/**'
-      - 'tests/**'
-      - 'UrbanPets.slnx'
-      - 'Directory.Build.props'
-      - 'Directory.Packages.props'
-      - 'version.json'
-      - '.config/dotnet-tools.json'
-      - '.github/workflows/ci.yml'
+    push:
+        branches: [dev, main]
+        paths:
+            - "src/Api/**"
+            - "tests/**"
+            - "UrbanPets.slnx"
+            - "Directory.Build.props"
+            - "Directory.Packages.props"
+            - "version.json"
+            - ".config/dotnet-tools.json"
+            - ".github/workflows/ci.yml"
 
-  pull_request:
-    branches: [ dev, main ]
-    paths:
-      - 'src/Api/**'
-      - 'tests/**'
-      - 'UrbanPets.slnx'
-      - 'Directory.Build.props'
-      - 'Directory.Packages.props'
-      - 'version.json'
-      - '.config/dotnet-tools.json'
-      - '.github/workflows/ci.yml'
+    pull_request:
+        branches: [dev, main]
+        paths:
+            - "src/Api/**"
+            - "tests/**"
+            - "UrbanPets.slnx"
+            - "Directory.Build.props"
+            - "Directory.Packages.props"
+            - "version.json"
+            - ".config/dotnet-tools.json"
+            - ".github/workflows/ci.yml"
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+    build-and-test:
+        runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout del código
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+        steps:
+            - name: Checkout del código
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
-    - name: Configurar SDK de .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '10.0.x'
+            - name: Configurar SDK de .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: "10.0.x"
 
-    - name: Restaurar herramientas .NET
-      run: dotnet tool restore
+            - name: Restaurar herramientas .NET
+              run: dotnet tool restore
 
-    - name: Obtener versión con NBGV
-      id: version
-      run: |
-        VERSION=$(dotnet nbgv get-version --format json | jq -r '.SemVer2')
-        NUGET_VERSION=$(dotnet nbgv get-version --format json | jq -r '.NuGetPackageVersion')
-        INFORMATIONAL_VERSION=$(dotnet nbgv get-version --format json | jq -r '.AssemblyInformationalVersion')
+            - name: Obtener versión con NBGV
+              id: version
+              run: |
+                  VERSION=$(dotnet nbgv get-version --format json | jq -r '.SemVer2')
+                  NUGET_VERSION=$(dotnet nbgv get-version --format json | jq -r '.NuGetPackageVersion')
+                  INFORMATIONAL_VERSION=$(dotnet nbgv get-version --format json | jq -r '.AssemblyInformationalVersion')
 
-        echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "nuget_version=$NUGET_VERSION" >> $GITHUB_OUTPUT
-        echo "informational_version=$INFORMATIONAL_VERSION" >> $GITHUB_OUTPUT
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  echo "nuget_version=$NUGET_VERSION" >> $GITHUB_OUTPUT
+                  echo "informational_version=$INFORMATIONAL_VERSION" >> $GITHUB_OUTPUT
 
-        echo "Version: $VERSION"
-        echo "NuGet Version: $NUGET_VERSION"
-        echo "Informational Version: $INFORMATIONAL_VERSION"
+                  echo "Version: $VERSION"
+                  echo "NuGet Version: $NUGET_VERSION"
+                  echo "Informational Version: $INFORMATIONAL_VERSION"
 
-    - name: Restaurar dependencias NuGet
-      run: dotnet restore UrbanPets.slnx
+            - name: Restaurar dependencias NuGet
+              run: dotnet restore UrbanPets.slnx
 
-    - name: Validar formato
-      run: dotnet format UrbanPets.slnx --verify-no-changes --no-restore
+            - name: Validar formato
+              run: dotnet format UrbanPets.slnx --verify-no-changes --no-restore
 
-    - name: Compilar solución
-      run: dotnet build UrbanPets.slnx --configuration Release --no-restore
+            - name: Compilar solución
+              run: dotnet build UrbanPets.slnx --configuration Release --no-restore
 
-    - name: Ejecutar pruebas unitarias con cobertura
-      run: >
-        dotnet test UrbanPets.slnx
-        --configuration Release
-        --no-build
-        --verbosity normal
-        --collect:"XPlat Code Coverage"
-        --results-directory ./TestResults
+            - name: Ejecutar pruebas unitarias con cobertura
+              run: >
+                  dotnet test UrbanPets.slnx
+                  --configuration Release
+                  --no-build
+                  --verbosity normal
+                  --collect:"XPlat Code Coverage"
+                  --results-directory ./TestResults
 
-    - name: Generar resumen de cobertura
-      uses: irongut/CodeCoverageSummary@v1.3.0
-      with:
-        filename: TestResults/**/coverage.cobertura.xml
-        badge: true
-        fail_below_min: false
-        format: markdown
-        output: both
+            - name: Generar resumen de cobertura
+              uses: irongut/CodeCoverageSummary@v1.3.0
+              with:
+                  filename: TestResults/**/coverage.cobertura.xml
+                  badge: true
+                  fail_below_min: false
+                  format: markdown
+                  output: both
 
-    - name: Publicar resumen de cobertura
-      run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+            - name: Publicar resumen de cobertura
+              run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
-    - name: Publicar aplicación
-      run: |
-        dotnet publish src/Api/UrbanPets.Api.csproj \
-          --configuration Release \
-          --no-build \
-          --output ./publish
+            - name: Publicar aplicación
+              run: |
+                  dotnet publish src/Api/UrbanPets.Api.csproj \
+                    --configuration Release \
+                    --no-build \
+                    --output ./publish
 
-    - name: Empaquetar artifact versionado
-      run: |
-        VERSION="${{ steps.version.outputs.nuget_version }}"
-        mkdir -p artifacts
-        zip -r artifacts/UrbanPets.Api-$VERSION.zip ./publish
+            - name: Empaquetar artifact versionado
+              run: |
+                  VERSION="${{ steps.version.outputs.nuget_version }}"
+                  mkdir -p artifacts
+                  zip -r artifacts/UrbanPets.Api-$VERSION.zip ./publish
 
-    - name: Subir artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: UrbanPets.Api-${{ steps.version.outputs.nuget_version }}
-        path: artifacts/*.zip
+            - name: Subir artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: UrbanPets.Api-${{ steps.version.outputs.nuget_version }}
+                  path: artifacts/*.zip
